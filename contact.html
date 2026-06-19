@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#283593" />
+  <meta name="description" content="Contact Grace Cathedral — visit us, send a message, or find our location on the map." />
+  <title>Contact — Grace Cathedral</title>
+  <link rel="icon" type="image/png" href="assets/church-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 class="section-title">Get in Touch</h1>
+    <p class="section-subtitle">We'd love to hear from you. Send us a message or visit us in person.</p>
+
+    <div class="grid grid-2" style="align-items:start">
+      <div class="card" style="padding:28px">
+        <h3 style="margin-bottom:16px">Send a Message</h3>
+        <form id="contactForm">
+          <div><label for="name">Your Name</label><input id="name" required placeholder="Jane Doe" /></div>
+          <div><label for="email">Email</label><input id="email" type="email" required placeholder="jane@example.com" /></div>
+          <div><label for="subject">Subject</label><input id="subject" required placeholder="Prayer request, info, etc." /></div>
+          <div><label for="message">Message</label><textarea id="message" required placeholder="Type your message..."></textarea></div>
+          <button type="submit" class="btn btn-primary" style="justify-self:start"><span class="material-icons">send</span> Send Message</button>
+        </form>
+      </div>
+
+      <div>
+        <div class="card" style="padding:24px;margin-bottom:18px">
+          <h3>Visit Us</h3>
+          <p style="margin-top:8px"><span class="material-icons" style="vertical-align:middle;color:var(--gold)">place</span> 123 Faith Avenue, City, Country</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">phone</span> +1 (555) 010-1234</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">mail</span> hello@gracecathedral.org</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">schedule</span> Office: Mon–Fri, 9 AM – 5 PM</p>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <iframe
+            title="Map"
+            style="width:100%;height:300px;border:0"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-0.13%2C51.50%2C-0.11%2C51.51&layer=mapnik"
+            loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    buildShell('contact.html');
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      toast('✓ Thank you! Your message has been sent.');
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>

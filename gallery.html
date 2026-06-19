@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#283593" />
+  <meta name="description" content="Browse photos from Grace Cathedral worship services, baptisms, outreach and community events." />
+  <title>Photo Gallery — Grace Cathedral</title>
+  <link rel="icon" type="image/png" href="assets/church-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 class="section-title">Photo Gallery</h1>
+    <p class="section-subtitle">Moments of worship, fellowship and service.</p>
+
+    <div class="gallery-filters" id="filters">
+      <button class="chip active" data-cat="all">All</button>
+      <button class="chip" data-cat="worship">Worship</button>
+      <button class="chip" data-cat="events">Events</button>
+      <button class="chip" data-cat="outreach">Outreach</button>
+      <button class="chip" data-cat="community">Community</button>
+    </div>
+
+    <div class="gallery" id="gallery"></div>
+  </main>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" aria-label="Close">✕</button>
+    <button class="lb-prev" aria-label="Previous">‹</button>
+    <img id="lbImage" alt="" />
+    <button class="lb-next" aria-label="Next">›</button>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    buildShell('gallery.html');
+
+    const photos = [
+      { src: 'assets/gallery-1.jpg', cat: 'worship',   caption: 'Sunday Worship Service' },
+      { src: 'assets/gallery-2.jpg', cat: 'events',    caption: 'Christmas Eve Service' },
+      { src: 'assets/gallery-3.jpg', cat: 'community', caption: 'Fellowship Gathering' },
+      { src: 'assets/gallery-4.jpg', cat: 'outreach',  caption: 'Community Outreach' },
+      { src: 'assets/gallery-5.jpg', cat: 'worship',   caption: 'Choir Performance' },
+      { src: 'assets/gallery-6.jpg', cat: 'events',    caption: 'Baptism Sunday' },
+      { src: 'assets/gallery-7.jpg', cat: 'community', caption: 'Youth Ministry Night' },
+      { src: 'assets/gallery-8.jpg', cat: 'outreach',  caption: 'Food Drive Volunteers' },
+    ];
+
+    const gallery = document.getElementById('gallery');
+    let filtered = [...photos];
+    let current = 0;
+
+    function render(cat) {
+      filtered = cat === 'all' ? [...photos] : photos.filter(p => p.cat === cat);
+      gallery.innerHTML = filtered.map((p, i) =>
+        `<img src="${p.src}" alt="${p.caption}" loading="lazy" data-index="${i}">`
+      ).join('');
+    }
+
+    document.getElementById('filters').addEventListener('click', e => {
+      if (!e.target.matches('.chip')) return;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      e.target.classList.add('active');
+      render(e.target.dataset.cat);
+    });
+
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImage');
+    const lbCap = document.getElementById('lbCaption');
+
+    gallery.addEventListener('click', e => {
+      if (e.target.tagName !== 'IMG') return;
+      current = +e.target.dataset.index;
+      show();
+    });
+    function show() {
+      lbImg.src = filtered[current].src;
+      lbCap.textContent = filtered[current].caption;
+      lb.classList.add('open');
+    }
+    lb.querySelector('.lb-close').onclick = () => lb.classList.remove('open');
+    lb.querySelector('.lb-prev').onclick = () => { current = (current - 1 + filtered.length) % filtered.length; show(); };
+    lb.querySelector('.lb-next').onclick = () => { current = (current + 1) % filtered.length; show(); };
+    lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') lb.classList.remove('open');
+      if (e.key === 'ArrowLeft') lb.querySelector('.lb-prev').click();
+      if (e.key === 'ArrowRight') lb.querySelector('.lb-next').click();
+    });
+
+    render('all');
+  </script>
+</body>
+</html>

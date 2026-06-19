@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#283593" />
+  <meta name="description" content="Listen to sermons and worship music from Grace Cathedral with our custom audio player." />
+  <title>Audio Library — Grace Cathedral</title>
+  <link rel="icon" type="image/png" href="assets/church-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="container" style="padding-bottom:120px">
+    <h1 class="section-title">Audio Sermons & Worship</h1>
+    <p class="section-subtitle">Listen anytime — control speed, volume and skip 10 seconds.</p>
+
+    <div id="audioList"></div>
+
+    <p style="margin-top:24px;color:var(--text-muted);font-size:14px">
+      <span class="material-icons" style="vertical-align:middle;font-size:18px">info</span>
+      Add your own MP3 files to the <code>audio/</code> folder and update the list in this page.
+    </p>
+  </main>
+
+  <div class="player-bar" id="playerBar">
+    <div class="info">
+      <strong id="pTitle">—</strong>
+      <span id="pSpeaker">—</span>
+    </div>
+    <div class="controls">
+      <button id="pBack" title="Back 10s"><span class="material-icons">replay_10</span></button>
+      <button id="pPlay" class="main"><span class="material-icons" id="pIcon">play_arrow</span></button>
+      <button id="pFwd" title="Forward 10s"><span class="material-icons">forward_10</span></button>
+      <button id="pStop" title="Stop"><span class="material-icons">stop</span></button>
+    </div>
+    <div class="progress-row">
+      <span id="pCur">0:00</span>
+      <input type="range" id="pSeek" value="0" min="0" max="100" step="0.1" />
+      <span id="pDur">0:00</span>
+    </div>
+    <div class="controls">
+      <span class="material-icons" style="color:var(--text-muted)">volume_up</span>
+      <input type="range" id="pVol" min="0" max="1" step="0.05" value="1" />
+      <select id="pRate" title="Playback speed">
+        <option>0.5</option><option>0.75</option><option selected>1</option>
+        <option>1.25</option><option>1.5</option><option>2</option>
+      </select>
+    </div>
+  </div>
+
+  <audio id="audioEl" preload="metadata"></audio>
+
+  <script src="js/app.js"></script>
+  <script>
+    buildShell('audio-library.html');
+
+    const tracks = [
+      { title: 'Walking by Faith',         speaker: 'Rev. John Doe',   src: 'audio/sermon-1.mp3' },
+      { title: 'The Power of Prayer',      speaker: 'Rev. Mary Smith', src: 'audio/sermon-2.mp3' },
+      { title: 'Living with Hope',         speaker: 'Pastor Peter J.', src: 'audio/sermon-3.mp3' },
+      { title: 'Worship Set — Sunday AM',  speaker: 'Worship Team',    src: 'audio/worship-1.mp3' },
+    ];
+
+    const list = document.getElementById('audioList');
+    list.innerHTML = tracks.map((t, i) => `
+      <div class="audio-item">
+        <button class="play-btn" data-idx="${i}" title="Play"><span class="material-icons">play_arrow</span></button>
+        <div class="meta">
+          <h4>${t.title}</h4>
+          <p>${t.speaker}</p>
+        </div>
+        <a class="icon-btn" style="color:var(--primary);background:var(--surface)" href="${t.src}" download title="Download">
+          <span class="material-icons">download</span>
+        </a>
+      </div>
+    `).join('');
+
+    const audio = document.getElementById('audioEl');
+    const bar = document.getElementById('playerBar');
+    const pIcon = document.getElementById('pIcon');
+    const pTitle = document.getElementById('pTitle');
+    const pSpeaker = document.getElementById('pSpeaker');
+    const pSeek = document.getElementById('pSeek');
+    const pCur = document.getElementById('pCur');
+    const pDur = document.getElementById('pDur');
+
+    function fmt(s) { if (!isFinite(s)) return '0:00'; const m = Math.floor(s/60), x = Math.floor(s%60); return `${m}:${x.toString().padStart(2,'0')}`; }
+
+    list.addEventListener('click', e => {
+      const btn = e.target.closest('.play-btn');
+      if (!btn) return;
+      const t = tracks[+btn.dataset.idx];
+      if (audio.src.endsWith(t.src)) { togglePlay(); return; }
+      audio.src = t.src;
+      pTitle.textContent = t.title; pSpeaker.textContent = t.speaker;
+      bar.classList.add('active');
+      audio.play().catch(() => toast('Audio file not found. Add MP3s in /audio/.'));
+    });
+
+    function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
+    document.getElementById('pPlay').onclick = togglePlay;
+    document.getElementById('pBack').onclick = () => audio.currentTime = Math.max(0, audio.currentTime - 10);
+    document.getElementById('pFwd').onclick  = () => audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
+    document.getElementById('pStop').onclick = () => { audio.pause(); audio.currentTime = 0; };
+    document.getElementById('pVol').oninput  = e => audio.volume = +e.target.value;
+    document.getElementById('pRate').onchange = e => audio.playbackRate = +e.target.value;
+    pSeek.oninput = e => { if (audio.duration) audio.currentTime = (e.target.value / 100) * audio.duration; };
+
+    audio.addEventListener('play',  () => pIcon.textContent = 'pause');
+    audio.addEventListener('pause', () => pIcon.textContent = 'play_arrow');
+    audio.addEventListener('timeupdate', () => {
+      pCur.textContent = fmt(audio.currentTime);
+      pDur.textContent = fmt(audio.duration);
+      if (audio.duration) pSeek.value = (audio.currentTime / audio.duration) * 100;
+    });
+    audio.addEventListener('error', () => toast('Audio file not found. Add MP3s in /audio/.'));
+  </script>
+</body>
+</html>

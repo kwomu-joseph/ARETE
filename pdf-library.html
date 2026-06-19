@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#283593" />
+  <meta name="description" content="Read devotionals, study guides and church bulletins in the Grace Cathedral PDF Library." />
+  <title>PDF Library — Grace Cathedral</title>
+  <link rel="icon" type="image/png" href="assets/church-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 class="section-title">PDF Library</h1>
+    <p class="section-subtitle">Read devotionals, bulletins and study guides — open inline in your browser.</p>
+
+    <input type="search" id="search" placeholder="🔍  Search documents..." style="margin-bottom:20px" />
+
+    <div class="pdf-list" id="pdfList"></div>
+
+    <div id="viewer" style="display:none;margin-top:24px">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="closeViewer"><span class="material-icons">close</span> Close</button>
+        <a id="downloadLink" class="btn btn-outline" style="color:var(--primary);border-color:var(--primary)" download>
+          <span class="material-icons">download</span> Download
+        </a>
+        <strong id="viewerTitle" style="color:var(--primary)"></strong>
+      </div>
+      <iframe id="pdfFrame" style="width:100%;height:80vh;border:1px solid var(--border);border-radius:var(--radius)"></iframe>
+    </div>
+
+    <p style="margin-top:24px;color:var(--text-muted);font-size:14px">
+      <span class="material-icons" style="vertical-align:middle;font-size:18px">info</span>
+      Add your own PDFs to the <code>pdfs/</code> folder and update the list in this page.
+    </p>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    buildShell('pdf-library.html');
+
+    const docs = [
+      { title: 'Daily Devotional — January',    desc: '31 days of reflection',              file: 'pdfs/devotional-january.pdf' },
+      { title: 'Sunday Service Bulletin',       desc: 'Order of worship & announcements',   file: 'pdfs/bulletin-sunday.pdf' },
+      { title: 'Bible Study — Book of Romans',  desc: '12-week small group guide',          file: 'pdfs/study-romans.pdf' },
+      { title: 'Youth Discipleship Manual',     desc: 'For teens & young adults',           file: 'pdfs/youth-manual.pdf' },
+      { title: 'Church History & Beliefs',      desc: 'Our story and statement of faith',   file: 'pdfs/history-beliefs.pdf' },
+    ];
+
+    const list = document.getElementById('pdfList');
+    const viewer = document.getElementById('viewer');
+    const frame = document.getElementById('pdfFrame');
+    const search = document.getElementById('search');
+
+    function render(q = '') {
+      const filtered = docs.filter(d => d.title.toLowerCase().includes(q.toLowerCase()));
+      list.innerHTML = filtered.map(d => `
+        <div class="pdf-item" data-file="${d.file}" data-title="${d.title}">
+          <span class="material-icons pdf-icon">picture_as_pdf</span>
+          <div class="pdf-meta">
+            <h4>${d.title}</h4>
+            <p>${d.desc}</p>
+          </div>
+          <button class="btn btn-primary"><span class="material-icons">visibility</span> Open</button>
+        </div>
+      `).join('') || `<p style="color:var(--text-muted)">No documents match "${q}".</p>`;
+    }
+
+    list.addEventListener('click', e => {
+      const item = e.target.closest('.pdf-item');
+      if (!item) return;
+      const file = item.dataset.file;
+      frame.src = file;
+      document.getElementById('viewerTitle').textContent = item.dataset.title;
+      document.getElementById('downloadLink').href = file;
+      viewer.style.display = 'block';
+      localStorage.setItem('lastPdf', file);
+      viewer.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('closeViewer').onclick = () => {
+      viewer.style.display = 'none'; frame.src = '';
+    };
+    search.addEventListener('input', e => render(e.target.value));
+
+    render();
+    const last = localStorage.getItem('lastPdf');
+    if (last) toast('Tip: your last opened document is remembered.');
+  </script>
+</body>
+</html>
