@@ -14,7 +14,7 @@
 <body>
   <main class="container">
     <h1 class="section-title">PDF Library</h1>
-    <p class="section-subtitle">Read devotionals, bulletins and study guides — open inline in your browser.</p>
+    <p class="section-subtitle">Read books, annointed and written by the great men of God, here in our Library.</p>
 
     <input type="search" id="search" placeholder="🔍  Search documents..." style="margin-bottom:20px" />
 
@@ -31,22 +31,15 @@
       <iframe id="pdfFrame" style="width:100%;height:80vh;border:1px solid var(--border);border-radius:var(--radius)"></iframe>
     </div>
 
-    <p style="margin-top:24px;color:var(--text-muted);font-size:14px">
-      <span class="material-icons" style="vertical-align:middle;font-size:18px">info</span>
-      Add your own PDFs to the <code>pdfs/</code> folder and update the list in this page.
-    </p>
-  </main>
-
   <script src="js/app.js"></script>
   <script>
     buildShell('pdf-library.html');
 
     const docs = [
-      { title: 'Daily Devotional — January',    desc: '31 days of reflection',              file: 'pdfs/devotional-january.pdf' },
-      { title: 'Sunday Service Bulletin',       desc: 'Order of worship & announcements',   file: 'pdfs/bulletin-sunday.pdf' },
-      { title: 'Bible Study — Book of Romans',  desc: '12-week small group guide',          file: 'pdfs/study-romans.pdf' },
-      { title: 'Youth Discipleship Manual',     desc: 'For teens & young adults',           file: 'pdfs/youth-manual.pdf' },
-      { title: 'Church History & Beliefs',      desc: 'Our story and statement of faith',   file: 'pdfs/history-beliefs.pdf' },
+      { title: 'Catch the Anointing',    desc: 'Dag Heward Mills',              file: 'pdfs/Catch the Anointing - Dag Heward-Mills.pdf' },
+      { title: 'Church Growth',       desc: 'Dag Heward Mills',   file: 'pdfs/Church_Growth_-_Dag_Heward-M (1).pdf' },
+      { title: 'Why Non-Tithers are poor',  desc: 'Dag Heward Mills',          file: 'pdfs/Why-Non-Tithing-Christians-Become-Poor-a-Dag-Heward-Mills.pdf' },
+      { title: 'Prayer School Manual',     desc: 'Kwomu Joseph Samuel',           file: 'pdfs/Prayer school manual.pdf' },
     ];
 
     const list = document.getElementById('pdfList');

@@ -19,22 +19,27 @@
     <div class="grid grid-2" style="align-items:start">
       <div class="card" style="padding:28px">
         <h3 style="margin-bottom:16px">Send a Message</h3>
-        <form id="contactForm">
-          <div><label for="name">Your Name</label><input id="name" required placeholder="Jane Doe" /></div>
-          <div><label for="email">Email</label><input id="email" type="email" required placeholder="jane@example.com" /></div>
-          <div><label for="subject">Subject</label><input id="subject" required placeholder="Prayer request, info, etc." /></div>
-          <div><label for="message">Message</label><textarea id="message" required placeholder="Type your message..."></textarea></div>
+        <form action="https://api.web3forms.com/submit" method="POST" id="contactForm">
+  <!-- Insert your Web3Forms Access Key here -->
+          <input type="hidden" id="access_key" value="52373023-1542-473b-8df9-08b5ec4f4f44">
+          <div><label for="name">Your Name</label><input id="name" name="name" required placeholder="Jane Doe" /></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="jane@example.com" /></div>
+          <div><label for="subject">Subject</label><input id="subject" name="subject" required placeholder="Prayer request, info, etc." /></div>
+          <div><label for="message">Message</label><textarea id="message" name="message" required placeholder="Type your message..."></textarea></div>
           <button type="submit" class="btn btn-primary" style="justify-self:start"><span class="material-icons">send</span> Send Message</button>
-        </form>
+      </form>
+
+<div id="formResult" style="margin-top: 15px; font-weight: bold;"></div>
+
       </div>
 
       <div>
         <div class="card" style="padding:24px;margin-bottom:18px">
           <h3>Visit Us</h3>
-          <p style="margin-top:8px"><span class="material-icons" style="vertical-align:middle;color:var(--gold)">place</span> 123 Faith Avenue, City, Country</p>
-          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">phone</span> +1 (555) 010-1234</p>
-          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">mail</span> hello@gracecathedral.org</p>
-          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">schedule</span> Office: Mon–Fri, 9 AM – 5 PM</p>
+          <p style="margin-top:8px"><span class="material-icons" style="vertical-align:middle;color:var(--gold)">place</span> The Jesus Movement, Mukono</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">phone</span> +256(0) 789 759175</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">mail</span> kwomupro@gmail.com</p>
+          <p><span class="material-icons" style="vertical-align:middle;color:var(--gold)">schedule</span> Office: Sun 9am, Wed 6pm, Fri 6pm</p>
         </div>
         <div class="card" style="padding:0;overflow:hidden">
           <iframe
@@ -54,6 +59,50 @@
       e.preventDefault();
       toast('✓ Thank you! Your message has been sent.');
       e.target.reset();
+    });
+  </script>
+
+  <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Stops page reload
+        
+        const resultDiv = document.getElementById('formResult');
+        resultDiv.textContent = "Sending...";
+        resultDiv.style.color = "var(--text-muted)";
+
+        // Capture the inputs manually
+        const formData = {
+            access_key: document.getElementById('access_key').value,
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+
+        // Send data to the email API endpoint
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(async (response) => {
+            let json = await response.json();
+            if (response.status == 200) {
+                resultDiv.textContent = "Message sent successfully!";
+                resultDiv.style.color = "green";
+                document.getElementById('contactForm').reset(); // Clear form fields
+            } else {
+                resultDiv.textContent = json.message || "Something went wrong.";
+                resultDiv.style.color = "red";
+            }
+        })
+        .catch(error => {
+            resultDiv.textContent = "Network error. Please try again later.";
+            resultDiv.style.color = "red";
+        });
     });
   </script>
 </body>

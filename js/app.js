@@ -62,7 +62,7 @@ function buildShell(active) {
         </div>
         <div>
           <h4>Contact</h4>
-          <p style="opacity:.8;font-size:14px">123 Faith Avenue<br>City, Country<br>+1 (555) 010-1234</p>
+          <p style="opacity:.8;font-size:14px">Arete The Jesus Mov't Mukono<br>The Jesus City<br>+256(0) 789 759175</p>
         </div>
       </div>
       <div class="copyright">© ${new Date().getFullYear()} Arete Church TJM. All rights reserved.</div>
