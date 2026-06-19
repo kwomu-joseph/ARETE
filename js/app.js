@@ -24,8 +24,8 @@ function buildShell(active) {
           <span class="material-icons">menu</span>
         </button>
         <a href="index.html" class="brand">
-          <img src="assets/church-logo.png" alt="Grace Cathedral logo">
-          <span>Grace Cathedral<small>Faith • Hope • Love</small></span>
+          <img src="assets/church-logo.png" alt="Arete Church TJM logo">
+          <span>Arete Church TJM<small>Faith • Hope • Love</small></span>
         </a>
         <span class="spacer"></span>
         <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">
@@ -36,7 +36,7 @@ function buildShell(active) {
     <div class="drawer-overlay" id="drawerOverlay"></div>
     <aside class="drawer" id="drawer">
       <div class="drawer-head">
-        <h3>Grace Cathedral</h3>
+        <h3>Arete Church TJM</h3>
         <p>A place to belong, believe & become</p>
       </div>
       <nav class="drawer-nav">${navLinks}</nav>
@@ -47,7 +47,7 @@ function buildShell(active) {
     <footer>
       <div class="footer-inner">
         <div>
-          <h4>Grace Cathedral</h4>
+          <h4>Arete Church TJM</h4>
           <p style="opacity:.8;font-size:14px">A welcoming community rooted in faith, growing in love and serving with hope.</p>
         </div>
         <div>
@@ -65,7 +65,7 @@ function buildShell(active) {
           <p style="opacity:.8;font-size:14px">123 Faith Avenue<br>City, Country<br>+1 (555) 010-1234</p>
         </div>
       </div>
-      <div class="copyright">© ${new Date().getFullYear()} Grace Cathedral. All rights reserved.</div>
+      <div class="copyright">© ${new Date().getFullYear()} Arete Church TJM. All rights reserved.</div>
     </footer>
   `;
 

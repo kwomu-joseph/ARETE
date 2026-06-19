@@ -1,4 +1,4 @@
-Grace Cathedral — Static Church Website
+Arete Church TJM — Static Church Website
 ========================================
 
 Pure HTML, CSS, and JavaScript. No build step required.
