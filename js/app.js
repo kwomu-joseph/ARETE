@@ -25,7 +25,7 @@ function buildShell(active) {
         </button>
         <a href="index.html" class="brand">
           <img src="assets/church-logo.png" alt="Arete Church TJM logo">
-          <span>Arete Church TJM<small>Faith • Hope • Love</small></span>
+          <span>Arete TJM<small>Faith • Hope • Love</small></span>
         </a>
         <span class="spacer"></span>
         <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">
